@@ -13,3 +13,4 @@ dist/
 # generated artifacts (reproducible in one command — see READMEs)
 viz/public/trace.json
 experiments/*.png
+results/
