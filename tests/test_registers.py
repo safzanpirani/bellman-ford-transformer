@@ -57,7 +57,10 @@ def test_no_raw_indices_lint():
     raw = re.compile(r"\[[^\]\[]*,\s*\d+\s*\]")
     allowed = re.compile(r"(wq|wk|wv|wo)\[")  # head-internal dims are not registers
     for path in pkg.rglob("*.py"):
-        for lineno, line in enumerate(path.read_text().splitlines(), 1):
+        for lineno, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(),
+            1,
+        ):
             m = raw.search(line)
             if m and not allowed.search(line):
                 raise AssertionError(
