@@ -1,0 +1,15 @@
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.hypothesis/
+
+# node
+node_modules/
+dist/
+*.log
+
+# generated artifacts (reproducible in one command — see READMEs)
+viz/public/trace.json
+experiments/*.png
