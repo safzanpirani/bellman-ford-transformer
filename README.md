@@ -1,9 +1,10 @@
 # Hand-Coded Bellman-Ford Transformer
 
 A transformer whose weights are constructed by hand — no training anywhere —
-such that a forward pass provably executes the Bellman-Ford single-source
-shortest-path algorithm on an input graph. One transformer block is one
-relaxation round; the block is weight-tied and applied `N_MAX − 1` times.
+such that, within the bounded configuration described below, a forward pass
+executes the Bellman-Ford single-source shortest-path algorithm exactly on
+integer-weight graphs. One transformer block is one relaxation round; the block
+is weight-tied and applied `N_MAX − 1` times.
 
 ```bash
 python -m venv .venv && .venv/bin/pip install -r requirements.txt
@@ -36,6 +37,39 @@ model = BFTransformer()
 dist = decode_dist(model(encode_graph(g, source=0)), g.n)
 # {0: 0.0, 1: 3.0, 2: 5.0, 3: inf}
 ```
+
+## Prior art and scope
+
+Constructing transformers that execute programs is established by
+[RASP (arXiv:2106.06981)](https://arxiv.org/abs/2106.06981) and
+[Tracr (arXiv:2301.05062)](https://arxiv.org/abs/2301.05062).
+[Simulation of Graph Algorithms with Looped Transformers
+(arXiv:2402.01107)](https://arxiv.org/abs/2402.01107) constructs looped
+transformers for graph algorithms and discusses their finite-precision limits.
+This repository does not claim novelty for hand-compiling Bellman-Ford into a
+transformer. Its differentiators are narrower: explicit bit-exactness within a
+declared implementation regime, an executable round-by-round verifier, and a
+tracer exposing the complete residual state and routing.
+
+### Four exactness notions that must not be conflated
+
+1. **Real-arithmetic softmax.** At finite logits every attention weight is
+   strictly positive. A softmax-weighted average therefore never implements an
+   exact hard selection among unequal values.
+2. **Approximate sharpness.** To keep selection error at most
+   \(\varepsilon\) as the candidate count grows, the required score spread is
+   \(\Theta(\log(n/\varepsilon))\). This size-dispersion result is prior art:
+   [*Softmax is not Enough (for Sharp Size Generalisation)*
+   (arXiv:2410.01104)](https://arxiv.org/abs/2410.01104).
+3. **This float32 construction.** Its non-target exponentials underflow to
+   exactly zero at a fixed score gap. Once they are zero, increasing \(n\)
+   does not require a larger gap. This is an implementation property, not a
+   theorem: it depends on dtype, the softmax kernel, subnormal handling, and
+   flush-to-zero behaviour.
+4. **ReLU reduction.** The identity
+   `min(a, b) = a − ReLU(a − b)` is exact with constant-sized coefficients.
+   Reducing many candidates costs sequential or tree depth rather than growing
+   softmax score precision.
 
 ## How the construction works
 
@@ -81,7 +115,7 @@ must leave zeroed. All weight construction addresses the stream through
    application of the same block. A converged state is a bit-exact fixed
    point — tested.
 
-### Why attention here is *exact*, not approximate
+### Why attention is bit-exact in the tested float32 implementation
 
 Every attention head is designed so the intended target's logit exceeds all
 competitors' by at least `C_HARD/4 = 2500`. After softmax's internal
@@ -90,7 +124,8 @@ which **underflows float32 to exactly 0.0** — so attention patterns are
 exactly one-hot and value copies are float-exact, not merely close. Tokens
 with nothing to read (e.g. node tokens during the edge-reads-source head)
 fall back to the sink token and copy a clean zero. This is legitimate
-because every match in the construction is exact-or-nothing.
+because every match in the construction is exact-or-nothing. It is not a
+claim about real-arithmetic softmax or arbitrary hardware.
 
 ### Why there is no LayerNorm
 
@@ -124,7 +159,7 @@ every round.
 
 ## Guarantees & limits
 
-- **Exactness:** integer-weight graphs decode bit-exactly equal to
+- **Tested exactness:** integer-weight graphs decode bit-exactly equal to
   `networkx.single_source_bellman_ford_path_length`; float weights within
   `1e-4`. Verified by a 1,000-graph property suite plus hypothesis.
 - **FR-V:** `verify.py` checks the model state against a reference
