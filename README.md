@@ -38,6 +38,26 @@ dist = decode_dist(model(encode_graph(g, source=0)), g.n)
 # {0: 0.0, 1: 3.0, 2: 5.0, 3: inf}
 ```
 
+## Paper
+
+`docs/paper.md` is the prose source of truth; `paper/main.tex` typesets it.
+The body compiles in two typographic variants, selected by `\paperstyle`:
+
+```bash
+make -C paper           # Times, navy headings, running head (default)
+make -C paper lmodern   # Latin Modern, plain article, no colour
+make -C paper both
+```
+
+Each variant is a pair of files — `style-<variant>.tex` (packages, geometry,
+spacing, colours) and `titleblock-<variant>.tex` — and `main.tex` inputs them
+by name, so the two builds share one body with no forked copy. Both style
+files must define every command the body uses, including the colours the TikZ
+architecture figure references; the Latin Modern one redefines them as grays.
+Builds run under separate `-jobname`s so their `.aux`/`.bbl` never collide.
+Output lands in `output/pdf/`. The Latin Modern variant runs about a page
+longer, since Computer Modern sets wider than Times at the same nominal size.
+
 ## Prior art and scope
 
 Constructing transformers that execute programs is established by
