@@ -11,3 +11,7 @@ three bounded tasks:
 
 The cycle ends with `docs/pilot-v4-results.md`. It does not run the registered
 2×2×3 grid.
+
+Final scope: completed under a user-approved four-hour cut. The \(n \leq 8\)
+climb and four secondary ablations were explicitly dropped; the retained
+G1-compatible run, saturation analysis, drift study, and report were completed.
