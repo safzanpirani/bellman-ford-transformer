@@ -20,15 +20,15 @@
 \Urlmuskip=0mu plus 1mu
 
 \definecolor{navy}{HTML}{24445F}
-\definecolor{blue}{HTML}{2F6F9F}
-\definecolor{red}{HTML}{A9473A}
+\definecolor{accentblue}{HTML}{2F6F9F}
+\definecolor{accentred}{HTML}{A9473A}
 \definecolor{lightblue}{HTML}{EAF2F7}
 \definecolor{lightgray}{HTML}{F2F3F4}
 \definecolor{darkgray}{HTML}{4B4F52}
 
 \hypersetup{
   pdftitle={An Exact Bellman-Ford Transformer as Optimization Ground Truth},
-  pdfauthor={Anonymous Authors},
+  pdfauthor={Safzan Pirani},
   pdfsubject={Neural algorithmic reasoning and mechanistic interpretability},
   pdfkeywords={transformers, Bellman-Ford, algorithmic reasoning, mechanistic interpretability, optimization}
 }
@@ -52,7 +52,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\footnotesize Exact Bellman--Ford Transformer}
-\fancyhead[R]{\footnotesize Anonymous workshop draft}
+\fancyhead[R]{\footnotesize Safzan Pirani --- workshop draft}
 \fancyfoot[C]{\footnotesize\thepage}
 \renewcommand{\headrulewidth}{0.25pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -66,7 +66,7 @@
 \title{\vspace{-1.8em}\bfseries\color{navy}
 An Exact Bellman--Ford Transformer\\[-0.1em]
 as Optimization Ground Truth}
-\author{\normalsize Anonymous Authors\\
+\author{\normalsize Safzan Pirani\\
 \small Workshop draft}
 \date{\small July 2026}
 
@@ -244,14 +244,14 @@ length. Each round computes
 The sequence contains one sink token, a fixed allocation of node tokens, and a
 fixed allocation of directed-edge tokens. Residual coordinates encode node
 identities, the distance register, edge endpoints and weights, candidate
-slots, and temporary routing state. A single block performs one relaxation:
+slots, and temporary routing state. A single block performs one relaxation (Figure~\ref{fig:architecture}):
 edge tokens read source-node distance; gather heads route incoming candidates
 to destination slots; a ReLU network folds those candidates with the previous
 distance; and a residual delta writes the result while clearing scratch state.
 The same block is reused \(N_{\max}-1\) times. An optional extra round detects
 a reachable negative cycle by checking whether a distance decreases.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
 \centering
 \begin{tikzpicture}[
   node distance=0.55cm,
@@ -282,8 +282,8 @@ a reachable negative cycle by checking whether a distance decreases.
 \draw[arrow,rounded corners=5pt] (next.south) -- ++(0,-0.38) -|
   node[pos=0.48,below,font=\footnotesize] {same parameters, repeated \(N_{\max}-1\) times}
   (read.south);
-\node[draw=red,dashed,rounded corners=2pt,fit=(read)(gather)(min)(write),
-  inner sep=5pt,label={[font=\footnotesize\color{red}]above:one weight-tied relaxation block}] {};
+\node[draw=accentred,dashed,rounded corners=2pt,fit=(read)(gather)(min)(write),
+  inner sep=5pt,label={[font=\footnotesize\color{accentred}]above:one weight-tied relaxation block}] {};
 \end{tikzpicture}
 \caption{The constructed residual program. Attention performs fixed routing;
 the ReLU fold performs exact arithmetic minimum; the full block is reused for
@@ -414,7 +414,8 @@ Width 128, no LayerNorm & yes & 80k &
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.97\textwidth]{paper/figures/saturation-curves.pdf}
-\caption{Full 1,000-step validation histories from the frozen v4 artifact.
+\caption{Validation histories, logged every 1,000 optimization steps, from the
+frozen v4 artifact.
 Both width-128 models continue improving well past the original 4,000-step
 budget. The no-LayerNorm run preserves \gparity{} parity.}
 \label{fig:curves}
@@ -601,6 +602,7 @@ algorithm remains open because the required comparison was not run.
 
 \section*{Reproducibility}
 
+\begingroup\raggedright
 Complete evaluation histories are frozen in
 \path{docs/pilot-v4-curves.json}; the audit trail is in
 \path{docs/pilot-v4-results.md}. Diagnostic implementation is in
@@ -608,6 +610,7 @@ Complete evaluation histories are frozen in
 \path{train/v4_diagnostic.py}. Source commit \texttt{6489e31} contains the v4
 diagnostics; \texttt{ccb199b} freezes the report and curves. Runs used Python
 3.11.9, PyTorch 2.11.0+cu126, and an NVIDIA RTX 3090.
+\par\endgroup
 
 \bibliographystyle{unsrtnat}
 \bibliography{paper/references}
@@ -623,7 +626,7 @@ This ledger is part of the claim boundary, not a list of proposed explanations.
 \caption{Evidence ledger. ``Untested'' means no causal conclusion is drawn.}
 \label{tab:ledger}
 \small
-\begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.15\textwidth}X}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.15\textwidth}>{\raggedright\arraybackslash}X}
 \toprule
 Question & Status & Evidence \\
 \midrule
@@ -700,7 +703,6 @@ step 49k before writing a result artifact; a detached replacement was stopped
 under the fixed final time budget. Neither reached the end of its learning-rate
 schedule, so neither establishes saturation or a ceiling.
 
-\newpage
 A first \(10^{-3}\) attempt overlapped two other jobs on the same physical RTX
 3090 and terminated out of memory; it was rerun alone. Two fleet aliases were
 found to resolve to that same host. A fixed-data run that overlapped another
