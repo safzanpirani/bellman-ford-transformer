@@ -1,74 +1,19 @@
 \documentclass[10pt,twocolumn]{article}
 
-\usepackage[letterpaper,top=0.58in,bottom=0.62in,left=0.66in,right=0.66in,columnsep=0.24in]{geometry}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathptmx}
-\usepackage{microtype}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs,tabularx}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit}
-\usepackage{enumitem}
-\usepackage[font=small,labelfont=bf,labelsep=period]{caption}
-\usepackage{titlesec}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage{fancyhdr}
-\usepackage[hidelinks]{hyperref}
-\Urlmuskip=0mu plus 1mu
-
-\definecolor{navy}{HTML}{24445F}
-\definecolor{accentblue}{HTML}{2F6F9F}
-\definecolor{accentred}{HTML}{A9473A}
-\definecolor{lightblue}{HTML}{EAF2F7}
-\definecolor{lightgray}{HTML}{F2F3F4}
-\definecolor{darkgray}{HTML}{4B4F52}
-
-\hypersetup{
-  pdftitle={An Exact Bellman-Ford Transformer as Optimization Ground Truth},
-  pdfauthor={Safzan Pirani},
-  pdfsubject={Neural algorithmic reasoning and mechanistic interpretability},
-  pdfkeywords={transformers, Bellman-Ford, algorithmic reasoning, mechanistic interpretability, optimization}
-}
-
-\setlength{\parindent}{1em}
-\setlength{\parskip}{0pt}
-\setlength{\columnsep}{0.24in}
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
-\setlength{\floatsep}{7pt plus 2pt minus 2pt}
-\setlength{\intextsep}{7pt plus 2pt minus 2pt}
-\setlength{\abovecaptionskip}{3pt}
-\setlength{\belowcaptionskip}{-2pt}
-\setlist{nosep,leftmargin=1.35em}
-\renewcommand{\arraystretch}{1.08}
-
-\titleformat{\section}{\large\bfseries\color{navy}}{\thesection}{0.45em}{}
-\titleformat{\subsection}{\normalsize\bfseries\color{navy}}{\thesubsection}{0.4em}{}
-\titlespacing*{\section}{0pt}{8pt plus 2pt minus 1pt}{3pt}
-\titlespacing*{\subsection}{0pt}{6pt plus 1pt minus 1pt}{2pt}
-
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\footnotesize Exact Bellman--Ford Transformer}
-\fancyhead[R]{\footnotesize Safzan Pirani --- workshop draft}
-\fancyfoot[C]{\footnotesize\thepage}
-\renewcommand{\headrulewidth}{0.25pt}
-\renewcommand{\footrulewidth}{0pt}
-\setlength{\headheight}{12pt}
+% Two typographic variants share one body.  Build the default Times look with
+%   make
+% and the Latin Modern (Computer Modern) look with
+%   make lmodern
+% which sets \paperstyle before this file is read.
+\providecommand{\paperstyle}{times}
+\input{paper/style-\paperstyle}
 
 \newcommand{\gparity}{\textsc{G1}}
 \newcommand{\rnse}{\textsc{rnse}}
 \newcommand{\infb}{\mathrm{INF}_{B}}
 \newcommand{\method}[1]{\textsc{#1}}
 
-\title{\vspace{-1.8em}\bfseries\color{navy}
-An Exact Bellman--Ford Transformer\\[-0.1em]
-as Optimization Ground Truth}
-\author{\normalsize Safzan Pirani\\
-\small Workshop draft}
-\date{\small July 2026}
+\input{paper/titleblock-\paperstyle}
 
 \begin{document}
 \maketitle

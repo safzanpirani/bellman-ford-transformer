@@ -1,0 +1,56 @@
+% Latin Modern variant --- the plain-article / Computer Modern look, matching
+% the DijkWalk workshop paper.  No colour, no running head, no titlesec: the
+% article class defaults carry the typography, and lmodern supplies a text and
+% math family designed together.
+%
+% Kept deliberately parallel to style-times.tex: every command the body relies
+% on (colours for the TikZ figure, caption setup, list spacing) is defined in
+% both files, so the two variants compile the same main.tex unchanged.
+
+\usepackage[letterpaper,margin=0.66in,columnsep=0.24in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+\usepackage{enumitem}
+\usepackage[font=small,labelfont=bf,labelsep=colon]{caption}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\Urlmuskip=0mu plus 1mu
+
+% Greyscale stand-ins so the TikZ block diagram compiles unchanged.
+\definecolor{navy}{gray}{0.10}
+\definecolor{accentblue}{gray}{0.35}
+\definecolor{accentred}{gray}{0.30}
+\definecolor{lightblue}{gray}{0.93}
+\definecolor{lightgray}{gray}{0.95}
+\definecolor{darkgray}{gray}{0.30}
+
+\hypersetup{
+  pdftitle={An Exact Bellman-Ford Transformer as Optimization Ground Truth},
+  pdfauthor={Safzan Pirani},
+  pdfsubject={Neural algorithmic reasoning and mechanistic interpretability},
+  pdfkeywords={transformers, Bellman-Ford, algorithmic reasoning, mechanistic interpretability, optimization}
+}
+
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\textfloatsep}{7pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\tabcolsep}{3.5pt}
+\setlist{nosep,leftmargin=*}
+\renewcommand{\arraystretch}{1.06}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.90}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+
+% Push slack to the foot of a short column instead of stretching it between
+% paragraphs, which otherwise opens visible holes around full-width floats.
+\raggedbottom
