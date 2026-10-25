@@ -190,3 +190,13 @@ every round.
 - **Limits:** graphs with `n ≤ N_MAX` (default 8), `|w| ≤ W_MAX` (10), and
   in-degree `≤ D_MAX` (8, counting self-loops and parallel edges). The
   encoder rejects anything larger loudly; nothing is silently truncated.
+- **Empirical break points** (`python -m experiments.stress_bounds`, Config
+  guards bypassed, 30 random non-negative integer graphs, n ≤ 8, float32 CPU;
+  raw output in `experiments/stress_bounds.txt`):
+  - *Logit scale:* exact at `c_hard/4 ≥ 32` (`c_hard ≥ 128`); at 16 only 33%
+    of graphs are bit-exact (err ~5e-5), at 4 err 0.24, at 2 err 55. The
+    `c_hard/4 > 200` guard is ~6× conservative.
+  - *Weight magnitude:* exact up to `w_max = 2e6` (`INF_B = 1.6e7 < 2²⁴`);
+    at `w_max = 4e6` (`INF_B = 3.2e7 > 2²⁴`) only 40% exact, error 2 — the
+    float32 integer-mantissa limit. The `INF_B + W_MAX < 1e6` guard is ~16×
+    conservative; the break is consistent with `INF_B + W_MAX ≤ 2²⁴`.
